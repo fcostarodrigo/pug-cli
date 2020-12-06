@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`display help 1`] = `
+"coffee [files..]
+
+Positionals:
+  files  Files and folders to compile                           [default: [\\".\\"]]
+
+Options:
+      --help                  Show help                                [boolean]
+      --version               Show version number                      [boolean]
+  -o, --out                   Output directory                          [string]
+  -c, --config                Configuration file path                   [string]
+  -i, --ignore                Path of file containing patterns like gitignore
+                                                [string] [default: \\".pugignore\\"]
+  -e, --extensions            List of extensions to compile
+                                             [array] [default: [\\".jade\\",\\".pug\\"]]
+      --options.basedir       The root directory of all absolute inclusion
+                                                                        [string]
+      --options.doctype       Doctype to include in the templates if not
+                              specified                                 [string]
+      --options.self          Use a self namespace to hold the locals  [boolean]
+      --options.debug         Log tokens and functions to stdout       [boolean]
+      --options.compileDebug  Include function source in the compiled template
+                                                                       [boolean]
+"
+`;

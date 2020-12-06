@@ -1,0 +1,40 @@
+{
+  "name": "pug-cli",
+  "version": "1.0.0",
+  "description": "",
+  "bin": "dist/index.js",
+  "scripts": {
+    "build": "coffee --compile --output dist src && coffee src/setup/addShebang.coffee",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fcostarodrigo/open-path": "^5.0.4",
+    "@fcostarodrigo/walk": "^5.0.1",
+    "cosmiconfig": "^7.0.0",
+    "dotenv": "^8.2.0",
+    "glob-gitignore": "^1.0.14",
+    "ignore": "^5.1.8",
+    "lodash": "^4.17.20",
+    "pug": "^3.0.0",
+    "yargs": "^16.1.1"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "coffee"
+    ],
+    "testRegex": [
+      "\\.test\\.coffee$"
+    ],
+    "transform": {
+      "\\.coffee$": "./dist/setup/coffeeJestTransform.js"
+    }
+  },
+  "devDependencies": {
+    "coffeescript": "^2.5.1",
+    "jest": "^26.6.3"
+  }
+}
