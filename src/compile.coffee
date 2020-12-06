@@ -1,8 +1,8 @@
-{ promises: { writeFile } } = require 'fs'
-openPath = require '@fcostarodrigo/open-path'
+{ promises: { writeFile, mkdir } } = require 'fs'
+{ dirname } = require 'path'
 pug = require 'pug'
 
 module.exports = (source, options, target) ->
   content = pug.compileFile(source, options)(options)
-  await openPath target, true
+  try await mkdir dirname(target), { recurse: true }
   writeFile target, content

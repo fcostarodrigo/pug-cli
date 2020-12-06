@@ -1,48 +1,52 @@
-{ promises: { readFile, writeFile, mkdir, rmdir, readdir } } = require 'fs'
+{ vol } = require 'memfs'
 { spawnSync } = require 'child_process'
 { join } = require 'path'
+cli = require './cli'
 
-testFolder = 'cliTest'
+argv = null
+env = null
+cwd = process.cwd()
 
-script = join '..', 'src', 'cli.coffee'
-
-beforeEach ->
-  await mkdir testFolder
-  process.chdir testFolder
+beforeAll ->
+  argv = process.argv 
+  env = process.env
 
 afterEach ->
-  process.chdir '..'
-  await rmdir testFolder, { recursive: true }
-
-test 'display help', ->
-  process = spawnSync 'coffee', [script, '--help']
-  expect(process.stdout.toString()).toMatchSnapshot();
+  vol.reset()
+  jest.resetModules()
+  process.argv = argv
+  process.env = env
 
 test 'compile a pug file', ->
-  await writeFile 'index.pug', 'div hello'
+  vol.fromJSON
+    'index.pug': 'div hello'
 
-  spawnSync 'coffee', [script]
+  await cli()
 
-  content = await readFile 'index.html', 'utf-8'
-  expect(content).toBe('<div>hello</div>')
+  expect(vol.toJSON()).toEqual
+    "#{cwd}/index.pug": 'div hello'
+    "#{cwd}/index.html": '<div>hello</div>'
 
 test 'compile a specific pug file', ->
-  await writeFile 'index1.pug', 'div hello'
-  await writeFile 'index2.pug', 'div hello'
+  vol.fromJSON
+    'index1.pug': 'div hello'
+    'index2.pug': 'div hello'
 
-  spawnSync 'coffee', [script, 'index1.pug']
+  process.argv = [ 'coffee', 'script', 'index1.pug' ]
+  await cli()
 
-  files = await readdir '.'
-  expect(files.sort()).toEqual [
-    'index1.pug'
-    'index2.pug'
-    'index1.html'
-  ].sort()
+  expect(vol.toJSON()).toEqual
+    "#{cwd}/index1.pug": 'div hello'
+    "#{cwd}/index2.pug": 'div hello'
+    "#{cwd}/index1.html": '<div>hello</div>'
 
 test 'compile to a target folder', ->
-  await writeFile 'index.pug', 'div hello'
+  vol.fromJSON
+    'index.pug': 'div hello'
 
-  spawnSync 'coffee', [script, '--out', 'dist']
+  process.argv = [ 'coffee', 'script', '--out', 'dist' ]
+  await cli()
 
-  content = await readFile join('dist', 'index.html'), 'utf-8'
-  expect(content).toBe('<div>hello</div>')
+  expect(vol.toJSON()).toEqual
+    "#{cwd}/index.pug": 'div hello'
+    "#{cwd}/dist/index.html": '<div>hello</div>'

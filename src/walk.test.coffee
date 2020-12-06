@@ -1,20 +1,14 @@
-{ promises: { writeFile, mkdir, rmdir } } = require 'fs'
+{ vol } = require 'memfs'
 { join } = require 'path'
 ignore = require 'ignore'
 walk = require './walk'
 
-testFolder = 'walkTest'
-
 beforeEach ->
-  await mkdir testFolder
-  process.chdir testFolder
-
-afterEach ->
-  process.chdir '..'
-  await rmdir testFolder, { recursive: true }
+  vol.reset()
 
 test 'transverse a single file', ->
-  await writeFile 'index.pug', 'div hello'
+  vol.fromJSON
+    'index.pug': ''
 
   files = ['index.pug']
   cwd = false
@@ -29,9 +23,9 @@ test 'transverse a single file', ->
   ]
 
 test 'transverse a folder', ->
-  await mkdir 'fruits'
-  await writeFile join('fruits', 'banana.pug'), 'div hello'
-  await writeFile join('fruits', 'apple.pug'), 'div hello'
+  vol.fromJSON
+    'fruits/banana.pug': ''
+    'fruits/apple.pug': ''
 
   files = ['fruits']
   cwd = false
@@ -42,13 +36,14 @@ test 'transverse a folder', ->
   await walk files, cwd, ignoreInstance, extensions, callback
 
   expect(callback.mock.calls.sort()).toEqual [
-    ['fruits', join('fruits', 'banana.pug')]
-    ['fruits', join('fruits', 'apple.pug')]
+    ['fruits', 'fruits/banana.pug']
+    ['fruits', 'fruits/apple.pug']
   ].sort()
 
 test 'transverse the working directory', ->
-  await writeFile 'banana.pug', 'div hello'
-  await writeFile 'apple.pug', 'div hello'
+  vol.fromJSON
+    'banana.pug': ''
+    'apple.pug': ''
 
   files = []
   cwd = true
@@ -64,9 +59,9 @@ test 'transverse the working directory', ->
   ].sort()
 
 test 'ignore a file', ->
-  await mkdir 'fruits'
-  await writeFile join('fruits', 'banana.pug'), 'div hello'
-  await writeFile join('fruits', 'apple.pug'), 'div hello'
+  vol.fromJSON
+    'fruits/banana.pug': ''
+    'fruits/apple.pug': ''
 
   files = ['fruits']
   cwd = false
@@ -77,17 +72,15 @@ test 'ignore a file', ->
   await walk files, cwd, ignoreInstance, extensions, callback
 
   expect(callback.mock.calls).toEqual [
-    ['fruits', join('fruits', 'apple.pug')]
+    ['fruits', 'fruits/apple.pug']
   ]
 
 test 'ignore a folder', ->
-  await mkdir 'fruits'
-  await writeFile join('fruits', 'banana.pug'), 'div hello'
-  await writeFile join('fruits', 'apple.pug'), 'div hello'
-
-  await mkdir 'vegetables'
-  await writeFile join('vegetables', 'onion.pug'), 'div hello'
-  await writeFile join('vegetables', 'lettuce.pug'), 'div hello'
+  vol.fromJSON
+    'fruits/banana.pug': ''
+    'fruits/apple.pug': ''
+    'vegetables/onion.pug': ''
+    'vegetables/lettuce.pug': ''
 
   files = ['fruits']
   cwd = false
@@ -98,23 +91,23 @@ test 'ignore a folder', ->
   await walk files, cwd, ignoreInstance, extensions, callback
 
   expect(callback.mock.calls.sort()).toEqual [
-    ['fruits', join('fruits', 'banana.pug')]
-    ['fruits', join('fruits', 'apple.pug')]
+    ['fruits', 'fruits/banana.pug']
+    ['fruits', 'fruits/apple.pug']
   ].sort()
 
 test 'ignore extensions', ->
-  await mkdir 'fruits'
-  await writeFile join('fruits', 'banana.pug'), 'div hello'
-  await writeFile join('fruits', 'apple.html'), 'div hello'
+  vol.fromJSON
+    'fruits/banana.pug': ''
+    'fruits/apple.html': ''
 
   files = ['fruits']
   cwd = false
   extensions = ['.pug']
-  ignoreInstance = ignore().add('vegetables/')
+  ignoreInstance = ignore()
   callback = jest.fn()
 
   await walk files, cwd, ignoreInstance, extensions, callback
 
   expect(callback.mock.calls).toEqual [
-    ['fruits', join('fruits', 'banana.pug')]
+    ['fruits', 'fruits/banana.pug']
   ]

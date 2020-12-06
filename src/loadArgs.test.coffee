@@ -1,14 +1,16 @@
+{ vol } = require 'memfs'
 loadArgs = require './loadArgs'
 
 argv = null
 env = null
 
-beforeEach ->
-  jest.resetModules()
+beforeAll ->
   argv = process.argv 
   env = process.env
 
 afterEach ->
+  jest.resetModules()
+  vol.reset()
   process.argv = argv
   process.env = env
 
@@ -41,3 +43,12 @@ test 'parse environment variables', ->
     out: 'dist'
     options:
       debug: true
+
+test 'parse environment variables in dot env', ->
+  vol.fromJSON
+    '.env': 'PUG_OUT=dist'
+
+  args = await loadArgs()
+
+  expect(args).toEqual expect.objectContaining
+    out: 'dist'

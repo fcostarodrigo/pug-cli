@@ -1,7 +1,7 @@
-fs = require 'fs'
+{ promises: { writeFile, readFile } } = require 'fs'
 
 shebang = '#!/usr/bin/env node\n'
 
 do ->
-  content = await fs.promises.readFile 'dist/index.js'
-  fs.promises.writeFile 'dist/index.js', shebang + content
+  content = await readFile 'dist/cli.js'
+  writeFile 'dist/cli.js', shebang + content

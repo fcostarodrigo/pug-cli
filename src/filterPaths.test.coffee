@@ -1,7 +1,13 @@
+{ vol } = require 'memfs'
 { join } = require 'path'
 filterPaths = require './filterPaths'
 
 test 'filter out invalid paths', ->
+  vol.fromJSON
+    '/folder': {}
+
+  process.chdir '/etc'
+
   paths = [
     ''
     false

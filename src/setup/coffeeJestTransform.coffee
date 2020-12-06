@@ -1,6 +1,16 @@
+{ createHash } = require 'crypto';
 coffee = require 'coffeescript'
 
 module.exports =
+  getCacheKey: (sourceText, sourcePath, configString) ->
+    createHash 'md5'
+      .update sourceText
+      .update '\0', 'utf8'
+      .update sourcePath
+      .update '\0', 'utf8'
+      .update configString
+      .digest 'hex'
+
   process: (src, filename) ->
     { js, v3SourceMap } = coffee.compile src, { sourceMap: true }
 

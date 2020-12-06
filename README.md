@@ -5,13 +5,13 @@ CLI interface for [pug](https://pugjs.org/).
 ## Setup
 
 ```bash
-npm install @fcostarodrigo/pug-cli
+npm install -g @fcostarodrigo/pug-cli
 ```
 
 ## Usage
 
 ```bash
-pug [options] [..filesAndFolders]
+pug [options] [..files]
 ```
 
 | Command                | Description                                          | Type                                |
@@ -19,22 +19,21 @@ pug [options] [..filesAndFolders]
 | files                  | Files and folders to compile.                        | [default: ["."]]                    |
 | --help                 | Show help                                            | [boolean]                           |
 | --version              | Show version number                                  | [boolean]                           |
-| --out                  | Output directory, defaults to the template folder    | [string] [default: "."]             |
-| --configPath           | Configuration file path                              | [string]                            |
-| --ignorePath           | File containing patterns to ignore like gitignore    | [string] [default: ".pugignore"]    |
-| --extensions           | List of extensions to compile                        | [array] [default: [".jade",".pug"]] |
+| -o, --out              | Output directory                                     | [string] [default: "."]             |
+| -c, --config           | Configuration file path                              | [string]                            |
+| -i, --ignore           | Path of file containing patterns like gitignore      | [string] [default: ".pugignore"]    |
+| -e, --extensions       | List of extensions to compile                        | [array] [default: [".jade",".pug"]] |
 | --options.basedir      | The root directory of all absolute inclusion         | [string]                            |
 | --options.doctype      | Doctype to include in the templates if not specified | [string]                            |
 | --options.self         | Use a self namespace to hold the locals              | [boolean]                           |
 | --options.debug        | Log tokens and functions to stdout                   | [boolean]                           |
 | --options.compileDebug | Include function source in the compiled template     | [boolean]                           |
-  -e,             
-                                             
+
 Folders are searched for `.pug` and `.jade` files and `node_modules` is ignored by default.
 
-The arguments prefixed with options are passed directly to pug, those options are used as locals as well.
+The arguments prefixed with `options` are passed directly to pug, those options are used as locals as well.
 
-Extra arguments prefixed with options are also passed to pug.
+Extra arguments prefixed with `options` are also passed to pug.
 
 ```bash
 pug --options.message=hello
@@ -52,13 +51,13 @@ div= message
 
 You can also use config files to pass options.
 
-* `pug` property in `package.json`.
-* `.pugrc` in JSON or YAML.
-* `.pugrc.json`.
-* `.pugrc.yaml`.
-* `.pugrc.yml`.
-* `.pugrc.js` export a configuration object.
-* `pug.config.js` export a configuration object.
+- `pug` property in `package.json`.
+- `.pugrc` in JSON or YAML.
+- `.pugrc.json`.
+- `.pugrc.yaml`.
+- `.pugrc.yml`.
+- `.pugrc.js` export a configuration object.
+- `pug.config.js` export a configuration object.
 
 The configuration file will be resolved starting from the location of the file being compiled, and searching up the file tree until a config file is (or isn't) found.
 
@@ -70,12 +69,12 @@ You can use the config files that export configuration objects to pass functions
 module.exports = {
   options: {
     filters: {
-      upperCase: function(text) {
+      upperCase: function (text) {
         return text.toUpperCase();
-      }
-    }
-  }
-}
+      },
+    },
+  },
+};
 ```
 
 ```pug
@@ -100,7 +99,7 @@ You can also add a `.env` file with the environment variables.
 
 Environment variables takes precedence over config file options, but not command line arguments.
 
-To pass options to pug directly use a `__`.
+To pass options to pug directly prefix the variable with `PUG_OPTIONS__`.
 
 ```bash
 PUG_OPTIONS__MESSAGE_TEXT=hello pug

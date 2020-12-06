@@ -1,19 +1,13 @@
-{ promises: { writeFile, mkdir, rmdir } } = require 'fs'
+{ vol } = require 'memfs'
 { join } = require 'path'
 loadIgnore = require './loadIgnore'
 
-testFolder = 'loadIgnoreTest'
-
-beforeEach ->
-  await mkdir testFolder
-  process.chdir testFolder
-
 afterEach ->
-  process.chdir '..'
-  await rmdir testFolder, { recursive: true }
+  vol.reset()
 
 test 'ignore paths of a file', ->
-  await writeFile '.pugignore', 'test.pug'
+  vol.fromJSON
+    '.pugignore': 'test.pug'
 
   ignore = await loadIgnore '.pugignore'
 
@@ -21,7 +15,8 @@ test 'ignore paths of a file', ->
   expect(ignore.ignores('index.pug')).toBe(false)
 
 test 'fallback to .gitignore', ->
-  await writeFile '.gitignore', 'test.pug'
+  vol.fromJSON
+    '.gitignore': 'test.pug'
 
   ignore = await loadIgnore()
 
@@ -31,5 +26,5 @@ test 'fallback to .gitignore', ->
 test 'fallback to node modules', ->
   ignore = await loadIgnore()
 
-  expect(ignore.ignores(join('node_modules', 'index.pug'))).toBe(true)
+  expect(ignore.ignores('node_modules/index.pug')).toBe(true)
   expect(ignore.ignores('index.pug')).toBe(false)

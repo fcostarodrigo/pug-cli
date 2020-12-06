@@ -1,3 +1,5 @@
+{ config } = require 'dotenv'
+
 builder = (command) ->
   command
     .env 'PUG'
@@ -51,6 +53,7 @@ builder = (command) ->
 
 module.exports = ->
   new Promise (resolve) ->
+    config()
     require 'yargs'
       .command '* [files..]', false, builder, resolve
       .parse()

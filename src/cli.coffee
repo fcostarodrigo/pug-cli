@@ -9,7 +9,7 @@ mergeConfig = require './mergeConfig'
 resolvePath = require './resolvePath'
 filterPaths = require './filterPaths'
 
-main = ->
+module.exports = ->
   args = await loadArgs()
   argConfig = await loadConfig args.configPath, 'load'
   args = mergeConfig args, argConfig
@@ -22,5 +22,3 @@ main = ->
     fileConfig = mergeConfig args, config
     target = resolvePath root, file, fileConfig.out
     await compile file, fileConfig.options, target
-
-main().catch(console.error)

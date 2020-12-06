@@ -1,32 +1,27 @@
-{ promises: { writeFile, mkdir, rmdir } } = require 'fs'
+{ vol } = require 'memfs'
 { join } = require 'path'
 ignore = require 'ignore'
 resolveGlob = require './resolveGlob'
 
-testFolder = 'resolveGlobTest'
-
-beforeEach ->
-  await mkdir testFolder
-  process.chdir testFolder
-
 afterEach ->
-  process.chdir '..'
-  await rmdir testFolder, { recursive: true }
+  vol.reset()
 
 test 'empty array', ->
   files = await resolveGlob [], ignore()
   expect(files).toEqual []
 
 test 'resolve to a file', ->
-  await writeFile 'test.txt', 'hello'
+  vol.fromJSON
+    'test.txt': ''
 
   files = await resolveGlob ['*'], ignore()
 
   expect(files).toEqual [ 'test.txt' ]
 
 test 'resolve to files', ->
-  await writeFile 'test1.txt', 'hello'
-  await writeFile 'test2.txt', 'hello'
+  vol.fromJSON
+    'test1.txt': ''
+    'test2.txt': ''
 
   files = await resolveGlob ['*'], ignore()
 
@@ -36,53 +31,53 @@ test 'resolve to files', ->
   ].sort()
 
 test 'work with the working directory', ->
-  await writeFile 'test.txt', 'hello'
+  vol.fromJSON
+    'test.txt': ''
 
   files = await resolveGlob ['*'], ignore()
 
   expect(files).toEqual [ 'test.txt' ]
 
 test 'ignore files', ->
-  await writeFile 'test1.txt', 'hello'
-  await writeFile 'test2.txt', 'hello'
+  vol.fromJSON
+    'test1.txt': ''
+    'test2.txt': ''
 
   files = await resolveGlob ['*'], ignore().add('test2.txt')
 
   expect(files).toEqual [ 'test1.txt' ]
 
 test 'resolve to folders', ->
-  await mkdir 'fruits'
-  await writeFile join('fruits', 'banana.txt'), 'hello'
-  await writeFile join('fruits', 'apple.txt'), 'hello'
+  vol.fromJSON
+    'fruits/banana.pug': ''
+    'fruits/apple.pug': ''
 
   files = await resolveGlob ['*'], ignore()
 
   expect(files).toEqual [ 'fruits' ]
 
 test 'resolve to files in folders', ->
-  await mkdir 'fruits'
-  await writeFile join('fruits', 'banana.txt'), 'hello'
-  await writeFile join('fruits', 'apple.txt'), 'hello'
+  vol.fromJSON
+    'fruits/banana.pug': ''
+    'fruits/apple.pug': ''
 
-  files = await resolveGlob ['**/*.txt'], ignore()
+  files = await resolveGlob ['**/*.pug'], ignore()
 
   expect(files.sort()).toEqual [
-    join 'fruits', 'banana.txt'
-    join 'fruits', 'apple.txt'
+    'fruits/banana.pug'
+    'fruits/apple.pug'
   ].sort()
 
 test 'skip folders', ->
-  await mkdir 'fruits'
-  await writeFile join('fruits', 'banana.txt'), 'hello'
-  await writeFile join('fruits', 'apple.txt'), 'hello'
+  vol.fromJSON
+    'fruits/banana.pug': ''
+    'fruits/apple.pug': ''
+    'vegetables/onion.pug': ''
+    'vegetables/lettuce.pug': ''
 
-  await mkdir 'vegetables'
-  await writeFile join('vegetables', 'carrot.txt'), 'hello'
-  await writeFile join('vegetables', 'potato.txt'), 'hello'
-
-  files = await resolveGlob ['**/*.txt'], ignore().add('fruits')
+  files = await resolveGlob ['**/*.pug'], ignore().add('fruits')
 
   expect(files.sort()).toEqual [
-    join 'vegetables', 'carrot.txt'
-    join 'vegetables', 'potato.txt'
+    'vegetables/onion.pug'
+    'vegetables/lettuce.pug'
   ].sort()
