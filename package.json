@@ -1,15 +1,19 @@
 {
   "name": "pug-cli",
   "version": "1.0.0",
-  "description": "",
+  "description": "CLI interface for pug",
   "bin": "dist/index.js",
   "scripts": {
     "build": "coffee --compile --output dist src && coffee src/setup/addShebang.coffee",
     "test": "jest",
     "format": "prettier --write ."
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "pug",
+    "cli",
+    "watch"
+  ],
+  "author": "Rodrigo Fernandes da Costa",
   "license": "ISC",
   "dependencies": {
     "@fcostarodrigo/walk": "^5.0.1",
