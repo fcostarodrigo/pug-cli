@@ -1,17 +1,14 @@
-{ extname, relative } = require 'path'
 walk = require '@fcostarodrigo/walk'
+shouldCompile = require './shouldCompile'
 
-module.exports = (files, cwd, ignore, extensions, callback) ->
-  checkFile = (file) -> file is '.' or not ignore.ignores file
-  files.push '.' if cwd
+module.exports = (files, ignore, callback) ->
+  shouldWalk = (file) -> file is '.' or not ignore.ignores file
 
   for root in files
-    asyncIterator = walk root, false, checkFile
+    asyncIterator = walk root, false, shouldWalk
     loop
       { value: file, done } = await asyncIterator.next()
       break if done
-      continue unless checkFile file
-      continue unless extensions.includes(extname(file))
       await callback root, file
 
   return

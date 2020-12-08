@@ -19,6 +19,7 @@ pug [options] [..files]
 | files                  | Files and folders to compile.                        | [default: ["."]]                    |
 | --help                 | Show help                                            | [boolean]                           |
 | --version              | Show version number                                  | [boolean]                           |
+| -w, --watch            | Watch for changes                                    | [boolean]                           |
 | -o, --out              | Output directory                                     | [string] [default: "."]             |
 | -c, --config           | Configuration file path                              | [string]                            |
 | -i, --ignore           | Path of file containing patterns like gitignore      | [string] [default: ".pugignore"]    |

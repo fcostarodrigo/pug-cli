@@ -9,6 +9,11 @@ builder = (command) ->
       default: ['.']
       type: 'array'
 
+    .option 'watch',
+      alias: 'w',
+      describe: 'Watch for changes'
+      type: 'boolean'
+
     .option 'out',
       alias: 'o',
       describe: 'Output directory'
