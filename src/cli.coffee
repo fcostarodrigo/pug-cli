@@ -1,4 +1,5 @@
 walk = require './walk'
+watch = require './watch'
 compile = require './compile'
 loadArgs = require './loadArgs'
 checkCWD = require './checkCWD'
