@@ -2,7 +2,9 @@
   "name": "pug-cli",
   "version": "1.0.0",
   "description": "CLI interface for pug",
-  "bin": "dist/cliRun.js",
+  "bin": {
+    "pug": "dist/cliRun.js"
+  },
   "scripts": {
     "build": "coffee src/setup/build.coffee",
     "buildTestSetup": "coffee src/setup/buildTestSetup.coffee",
