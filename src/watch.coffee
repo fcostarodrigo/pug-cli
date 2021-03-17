@@ -2,14 +2,23 @@ watchr = require 'watchr'
 compile = require './compile'
 
 module.exports = (args, ignore, root) ->
-  callback = (err) -> throw err if err?
-  listener = (type, file) ->
-    switch type
-      when 'update', 'create'
-        await compile args, ignore, root, file, false
+  error = new Error "Error in watching \"#{root}\""
 
-  watcher = watchr.open root, listener, callback
+  new Promise (resolve, reject) ->
+    callback = (watcherError) ->
+      return unless watcherError?
+      error.watcherError = watcherError
+      reject error
 
-  process.once 'SIGINT', ->
-    watcher.close()
-    process.stdout.write '\n'
+    listener = (type, file) ->
+      return unless type in ['update', 'create']
+      try await compile args, ignore, root, file, false
+      catch compileError
+        error.compileError = compileError
+        reject error
+
+    watcher = watchr.open root, listener, callback
+
+    process.once 'SIGINT', ->
+      watcher.close()
+      process.stdout.write '\n'

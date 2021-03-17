@@ -9,9 +9,13 @@ executable = 'dist/cliRun.js'
 do ->
   ignore = makeIgnore().add('/src/setup/').add('*.test.coffee')
   files = await glob 'src/**/*.coffee', { ignore }
-  process = spawn 'coffee', ['--compile', '--output', 'dist', files...]
+  args = ['--inline-map', '--compile', '--output', 'dist', files...]
+  compiler = spawn 'coffee', args, stdio: 'inherit'
 
-  process.once 'close', ->
-    content = await readFile executable
-    writeFile executable, shebang + content
-    await chmod executable, S_IXUSR
+  compiler.once 'close', (code) ->
+    if code is 0
+      content = await readFile executable
+      writeFile executable, shebang + content
+      await chmod executable, S_IXUSR
+    else
+      process.exit 1

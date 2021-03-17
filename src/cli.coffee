@@ -22,5 +22,4 @@ module.exports = ->
     await compile args, ignore, root, file
 
   if args.watch
-    for file in files
-      watch args, ignore, file
+    await Promise.all (watch args, ignore, file for file in files)

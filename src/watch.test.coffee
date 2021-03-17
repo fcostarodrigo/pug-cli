@@ -20,16 +20,15 @@ test 'close on interruption', ->
 
   expect(close).toBeCalled()
 
-test 'throws errors', ->
+test 'propagate errors', ->
   args = extensions: ['.pug']
   ignorer = ignore()
   root = '.'
-  error = new Error
 
   watchr.open.mockImplementationOnce (root, listener, callback) ->
-    callback error
+    callback new Error
 
-  expect(-> watch(args, ignorer, root)).toThrow(error)
+  expect(watch(args, ignorer, root)).rejects.toThrow()
 
 test 'compile on file creation', ->
   args = extensions: ['.pug']
