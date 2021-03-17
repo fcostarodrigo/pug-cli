@@ -11,7 +11,7 @@ filterPaths = require './filterPaths'
 
 module.exports = ->
   args = await loadArgs()
-  argConfig = await loadConfig args.configPath, 'load'
+  argConfig = await loadConfig args.config, 'load'
   args = mergeConfig args, argConfig
   ignore = await loadIgnore args.ignorePath
   cwd = checkCWD args.files
