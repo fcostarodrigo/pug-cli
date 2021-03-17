@@ -51,20 +51,16 @@ div= message
 ## Config file
 
 You can also use config files to pass options.
-
-- `pug` property in `package.json`.
-- `.pugrc` in JSON or YAML.
-- `.pugrc.json`.
-- `.pugrc.yaml`.
-- `.pugrc.yml`.
-- `.pugrc.js` export a configuration object.
-- `pug.config.js` export a configuration object.
+The formats supported are "json", "yaml", "js", "coffee", "toml", and "ts".
+The file name must be `.pugrc.ext` where `ext` is one of the supported extensions or no extension for yaml and json.
+For the scripts, you can also use `pug.config.ext`.
+And you can include a `pug` property in your `package.json` as well.
 
 The configuration file will be resolved starting from the location of the file being compiled, and searching up the file tree until a config file is (or isn't) found.
 
 Command line options take precedence over config file options.
 
-You can use the config files that export configuration objects to pass functions to the filter option.
+You can use script config files to pass functions to the filter option.
 
 ```js
 module.exports = {
