@@ -6,11 +6,10 @@
     "pug": "dist/cliRun.js"
   },
   "scripts": {
-    "build": "coffee src/setup/build.coffee",
-    "buildTestSetup": "coffee src/setup/buildTestSetup.coffee",
     "test": "jest",
     "format": "prettier --write .",
-    "prepare": "husky install"
+    "prepublishOnly": "coffee src/setup/build.coffee",
+    "prepare": "husky install && coffee src/setup/buildTestSetup.coffee"
   },
   "keywords": [
     "pug",
