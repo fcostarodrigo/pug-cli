@@ -6,7 +6,7 @@ module.exports = (args, ignore, root) ->
   listener = (type, file) ->
     switch type
       when 'update', 'create'
-        await compile args, ignore, root, file
+        await compile args, ignore, root, file, false
 
   watcher = watchr.open root, listener, callback
 

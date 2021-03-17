@@ -6,9 +6,9 @@ mergeConfig = require './mergeConfig'
 resolvePath = require './resolvePath'
 shouldCompile = require './shouldCompile'
 
-module.exports = (args, ignore, root, source) ->
+module.exports = (args, ignore, root, source, cache) ->
   return unless shouldCompile source, ignore, args.extensions
-  config = mergeConfig(args, await loadConfig(source, 'search'))
+  config = mergeConfig(args, await loadConfig(source, 'search', cache))
   target = resolvePath root, source, config.out
   try await mkdir dirname(target), { recurse: true }
 

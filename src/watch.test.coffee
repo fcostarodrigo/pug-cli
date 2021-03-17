@@ -39,7 +39,7 @@ test 'compile on file creation', ->
   watch args, ignorer, root
 
   watchr.open.mock.calls[0][1]('create', 'index.pug')
-  expect(compile).toBeCalledWith(args, ignorer, root, 'index.pug')
+  expect(compile).toBeCalledWith(args, ignorer, root, 'index.pug', false)
 
 test 'compile on file update', ->
   args = extensions: ['.pug']
@@ -49,4 +49,4 @@ test 'compile on file update', ->
   watch args, ignorer, root
 
   watchr.open.mock.calls[0][1]('update', 'index.pug')
-  expect(compile).toBeCalledWith(args, ignorer, root, 'index.pug')
+  expect(compile).toBeCalledWith(args, ignorer, root, 'index.pug', false)
