@@ -12,3 +12,10 @@ test 'replicate the tree in out folder', ->
   out = 'dist'
   target = resolvePath root, source, out
   expect(target).toBe 'dist/downloads/index.html'
+
+test 'root equal to source', ->
+  root = 'src/index.pug'
+  source = 'src/index.pug'
+  out = 'dist'
+  target = resolvePath root, source, out
+  expect(target).toBe 'dist/index.html'

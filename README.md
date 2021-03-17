@@ -32,7 +32,7 @@ pug [options] [..files]
 
 Folders are searched for `.pug` and `.jade` files and `node_modules` is ignored by default.
 
-The arguments prefixed with `options` are passed directly to pug, those options are used as locals as well.
+The arguments prefixed with `options` are passed directly to pug, those options are used as local variables in pug templates as well.
 
 Extra arguments prefixed with `options` are also passed to pug.
 
@@ -98,7 +98,7 @@ All environment variables prefixed with `PUG_` are used, the pug prefix is ignor
 
 You can also add a `.env` file with the environment variables.
 
-Environment variables takes precedence over config file options, but not command line arguments.
+Environment variables take precedence over config file options, but not command line arguments.
 
 To pass options to pug directly prefix the variable with `PUG_OPTIONS__`.
 

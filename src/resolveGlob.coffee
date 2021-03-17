@@ -1,7 +1,7 @@
 { glob } = require 'glob-gitignore'
 
 module.exports = (files, ignore) ->
-  if files.length > 0
-    glob files, { ignore }
-  else
+  if files.length is 0
     files
+  else
+    glob files, { ignore }
