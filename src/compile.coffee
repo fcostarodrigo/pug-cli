@@ -10,7 +10,7 @@ module.exports = (args, ignore, root, source, cache) ->
   return unless shouldCompile source, ignore, args.extensions
   config = mergeConfig(args, await loadConfig(source, 'search', cache))
   target = resolvePath root, source, config.out
-  try await mkdir dirname(target), { recurse: true }
+  try await mkdir dirname(target), { recursive: true }
 
   content = pug.compileFile(source, config.options)(config.options)
   writeFile target, content
