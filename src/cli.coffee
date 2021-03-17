@@ -13,7 +13,7 @@ module.exports = ->
   args = await loadArgs()
   argConfig = await loadConfig args.config, 'load'
   args = mergeConfig args, argConfig
-  ignore = await loadIgnore args.ignorePath
+  ignore = await loadIgnore args.ignore
   cwd = checkCWD args.files
   files = await resolveGlob filterPaths(args.files), ignore
   files.push '.' if cwd
