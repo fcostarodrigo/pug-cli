@@ -8,7 +8,7 @@ shouldCompile = require './shouldCompile'
 
 module.exports = (args, ignore, root, source) ->
   return unless shouldCompile source, ignore, args.extensions
-  config = mergeConfig(args, loadConfig(source, 'search'))
+  config = mergeConfig(args, await loadConfig(source, 'search'))
   target = resolvePath root, source, config.out
   try await mkdir dirname(target), { recurse: true }
 
