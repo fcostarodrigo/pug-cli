@@ -10,4 +10,6 @@ module.exports = (args, ignore, root) ->
 
   watcher = watchr.open root, listener, callback
 
-  process.once 'SIGINT', -> watcher.close()
+  process.once 'SIGINT', ->
+    watcher.close()
+    process.stdout.write '\n'

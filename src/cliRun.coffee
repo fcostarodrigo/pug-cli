@@ -1,3 +1,5 @@
 cli = require './cli'
 
-cli().catch(console.error)
+cli().catch (error) ->
+  console.error error
+  process.exit 1
